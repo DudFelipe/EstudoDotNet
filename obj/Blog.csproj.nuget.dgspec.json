@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/media/dud/7C6CDEF86CDEAC60/Ubuntu/Estudos/Balta/Fundamentos do ASP.NET 6/Blog/Blog.csproj": {}
+    "/home/dud/Documents/Ubuntu/Estudos/Balta/Fundamentos do ASP.NET 6/EstudoDotNet/Blog.csproj": {}
   },
   "projects": {
-    "/media/dud/7C6CDEF86CDEAC60/Ubuntu/Estudos/Balta/Fundamentos do ASP.NET 6/Blog/Blog.csproj": {
+    "/home/dud/Documents/Ubuntu/Estudos/Balta/Fundamentos do ASP.NET 6/EstudoDotNet/Blog.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/media/dud/7C6CDEF86CDEAC60/Ubuntu/Estudos/Balta/Fundamentos do ASP.NET 6/Blog/Blog.csproj",
+        "projectUniqueName": "/home/dud/Documents/Ubuntu/Estudos/Balta/Fundamentos do ASP.NET 6/EstudoDotNet/Blog.csproj",
         "projectName": "Blog",
-        "projectPath": "/media/dud/7C6CDEF86CDEAC60/Ubuntu/Estudos/Balta/Fundamentos do ASP.NET 6/Blog/Blog.csproj",
+        "projectPath": "/home/dud/Documents/Ubuntu/Estudos/Balta/Fundamentos do ASP.NET 6/EstudoDotNet/Blog.csproj",
         "packagesPath": "/home/dud/.nuget/packages/",
-        "outputPath": "/media/dud/7C6CDEF86CDEAC60/Ubuntu/Estudos/Balta/Fundamentos do ASP.NET 6/Blog/obj/",
+        "outputPath": "/home/dud/Documents/Ubuntu/Estudos/Balta/Fundamentos do ASP.NET 6/EstudoDotNet/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/dud/.nuget/NuGet/NuGet.Config"
@@ -38,6 +38,14 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[7.0.2, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
@@ -47,6 +55,10 @@
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[7.0.2, )"
+            },
+            "SecureIdentity": {
+              "target": "Package",
+              "version": "[1.0.4, )"
             }
           },
           "imports": [
