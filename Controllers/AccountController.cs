@@ -17,17 +17,18 @@ namespace EstudoDotNet.Controllers
 
         public AccountController(TokenService tokenService)
         {
-            _tokenService = tokenService;    
+            _tokenService = tokenService;
         }
 
         [HttpPost("v1/accounts")]
         public async Task<IActionResult> Post(
-            [FromBody]RegisterViewModel model,
+            [FromBody] RegisterViewModel model,
+            [FromServices] EmailService emailService,
             [FromServices] BlogDataContext context
         )
         {
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
 
             var user = new User
@@ -45,30 +46,58 @@ namespace EstudoDotNet.Controllers
                 await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();
 
+                emailService.Send(user.Name,
+                    user.Email,
+                    $"Bem vindo, {user.Name}",
+                    $"Sua senha é <strong>{password}</strong>");
+
                 return Ok(new ResultViewModel<dynamic>(
                     new
                     {
-                        user = user.Email, 
+                        user = user.Email,
                         password
                     }
                 ));
             }
-            catch(DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 return StatusCode(400, new ResultViewModel<string>(ex.Message));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(400, new ResultViewModel<string>("Erro interno no servidor"));
             }
         }
 
         [HttpPost("v1/accounts/login")]
-        public IActionResult Login()
+        public async Task<IActionResult> Login(
+            [FromBody] LoginViewModel model,
+            [FromServices] BlogDataContext context
+        )
         {
-            var token = _tokenService.GenerateToken(null);
+            if (!ModelState.IsValid)
+                return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
 
-            return Ok(token);
+            var user = await context.Users
+                .AsNoTracking()
+                .Include(x => x.Roles)
+                .FirstOrDefaultAsync(x => x.Email == model.Email);
+
+            if (user == null)
+                return StatusCode(401, new ResultViewModel<string>("Usuário ou senha invalidos!"));
+
+            if (!PasswordHasher.Verify(user.PasswordHash, model.Password))
+                return StatusCode(401, new ResultViewModel<string>("Usuário ou senha invalidos!"));
+
+            try
+            {
+                var token = _tokenService.GenerateToken(user);
+                return Ok(new ResultViewModel<string>(token, null));
+            }
+            catch
+            {
+                return StatusCode(500, new ResultViewModel<string>("Erro interno no servidor"));
+            }
         }
     }
 }
