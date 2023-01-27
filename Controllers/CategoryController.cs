@@ -2,6 +2,7 @@ using Blog.Data;
 using Blog.Extensions;
 using Blog.Models;
 using Blog.ViewModels;
+using Blog.ViewModels.Categories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +20,7 @@ namespace Blog.Controllers
                 var categories = await context.Categories.ToListAsync();
                 return Ok(new ResultViewModel<List<Category>>(categories));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, new ResultViewModel<List<Category>>("Falha interna no servidor"));
             }
@@ -35,12 +36,12 @@ namespace Blog.Controllers
             {
                 var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
-                if(category == null)
+                if (category == null)
                     return NotFound(new ResultViewModel<Category>("Conteúdo não encontrado!"));
 
                 return Ok(new ResultViewModel<Category>(category));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, new ResultViewModel<List<Category>>("Falha interna no servidor"));
             }
@@ -51,7 +52,7 @@ namespace Blog.Controllers
             [FromBody] EditorCategoryViewModel model,
             [FromServices] BlogDataContext context)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(new ResultViewModel<Category>(ModelState.GetErrors()));
 
             try
@@ -68,7 +69,7 @@ namespace Blog.Controllers
 
                 return Created($"v1/categories/{category.Id}", new ResultViewModel<Category>(category));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, new ResultViewModel<Category>("05XE10 - Falha interna no servidor"));
             }
@@ -84,7 +85,7 @@ namespace Blog.Controllers
             {
                 var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
-                if(category == null)
+                if (category == null)
                     return NotFound(new ResultViewModel<Category>("Conteúdo não encontrado!"));
 
                 category.Name = model.Name;
@@ -95,7 +96,7 @@ namespace Blog.Controllers
 
                 return Ok(new ResultViewModel<Category>(category));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, new ResultViewModel<Category>("Falha interna no servidor"));
             }
@@ -111,7 +112,7 @@ namespace Blog.Controllers
             {
                 var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
-                if(category == null)
+                if (category == null)
                     return NotFound(new ResultViewModel<Category>("Conteúdo não encontrado!"));
 
                 context.Categories.Remove(category);
@@ -119,11 +120,11 @@ namespace Blog.Controllers
 
                 return Ok(new ResultViewModel<Category>(category));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, new ResultViewModel<Category>("Falha interna no servidor"));
             }
-            
+
         }
     }
 }
