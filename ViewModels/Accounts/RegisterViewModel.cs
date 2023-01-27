@@ -4,16 +4,15 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EstudoDotNet.ViewModels
+namespace EstudoDotNet.ViewModels.Accounts
 {
-    public class LoginViewModel
+    public class RegisterViewModel
     {
+        [Required(ErrorMessage = "O nome é obrigatório!")]
+        public string Name { get; set; }
 
         [Required(ErrorMessage = "O email é obrigatório!")]
         [EmailAddress(ErrorMessage = "O email é inválido!")]
         public string Email { get; set; }
-
-        [Required(ErrorMessage = "A senha é obrigatória!")]
-        public string Password { get; set; }
     }
 }

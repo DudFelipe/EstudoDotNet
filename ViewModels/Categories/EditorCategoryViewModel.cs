@@ -1,7 +1,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Blog.ViewModels
+namespace Blog.ViewModels.Categories
 {
     public class EditorCategoryViewModel
     {
@@ -11,5 +11,5 @@ namespace Blog.ViewModels
 
         [Required(ErrorMessage = "O slug é obrigatório!")]
         public string Slug { get; set; }
-    }   
+    }
 }
