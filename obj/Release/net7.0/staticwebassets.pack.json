@@ -1,0 +1,25 @@
+{
+  "Files": [
+    {
+      "Id": "/home/dud/Documents/Ubuntu/Estudos/Balta/Fundamentos do ASP.NET 6/EstudoDotNet/wwwroot/images/a564241a-28b3-4a9a-a1a7-56b553fbf89c.jpg",
+      "PackagePath": "staticwebassets/images/a564241a-28b3-4a9a-a1a7-56b553fbf89c.jpg"
+    },
+    {
+      "Id": "obj/Release/net7.0/staticwebassets/msbuild.Blog.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Release/net7.0/staticwebassets/msbuild.build.Blog.props",
+      "PackagePath": "build\\Blog.props"
+    },
+    {
+      "Id": "obj/Release/net7.0/staticwebassets/msbuild.buildMultiTargeting.Blog.props",
+      "PackagePath": "buildMultiTargeting\\Blog.props"
+    },
+    {
+      "Id": "obj/Release/net7.0/staticwebassets/msbuild.buildTransitive.Blog.props",
+      "PackagePath": "buildTransitive\\Blog.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

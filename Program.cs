@@ -1,9 +1,13 @@
+using System.IO.Compression;
 using System.Text;
 using System.Text.Json.Serialization;
 using Blog.Data;
 using EstudoDotNet;
 using EstudoDotNet.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,14 +16,27 @@ ConfigureAuthentication(builder);
 ConfigureMvc(builder);
 ConfigureServices(builder);
 
+//Adicionando o Swagger na aplicação
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 LoadConfiguration(app);
 
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();
 app.MapControllers();
+app.UseResponseCompression();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.Run();
 
 void LoadConfiguration(WebApplication app)
@@ -54,23 +71,39 @@ void ConfigureAuthentication(WebApplicationBuilder builder)
 
 void ConfigureMvc(WebApplicationBuilder builder)
 {
+    builder.Services.AddMemoryCache(); //Adicionando cache de dados
+    builder.Services.AddResponseCompression(options => //Adicionando compressão de dados
+    {
+        //options.Providers.Add<BrotliCompressionProvider>();
+        options.Providers.Add<GzipCompressionProvider>();
+        //options.Providers.Add<CustomCompressionProvider>();
+    });
+    builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+    {
+        options.Level = CompressionLevel.Optimal; //Definindo como deve ser feita a compressão dos dados
+    });
     builder
         .Services
         .AddControllers()
         .ConfigureApiBehaviorOptions(options =>
         {
-            options.SuppressModelStateInvalidFilter = true;
+            options.SuppressModelStateInvalidFilter = true; //Suprimindo a validação do ModelState. Necessário para fazer uma extensão para a ModelState
         })
         .AddJsonOptions(x =>
         {
-            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; //Ignorando referencias circulares dentro do Json de envio da requisição
             x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
         });
 }
 
 void ConfigureServices(WebApplicationBuilder builder)
 {
-    builder.Services.AddDbContext<BlogDataContext>();
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+    builder.Services.AddDbContext<BlogDataContext>(options =>
+    {
+        options.UseSqlServer(connectionString);
+    });
     builder.Services.AddTransient<TokenService>();
     builder.Services.AddTransient<EmailService>();
 }
